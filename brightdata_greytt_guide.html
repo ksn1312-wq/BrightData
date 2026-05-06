@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bright Data × Greytt.AI — Integration Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #002b3d;
+    --teal: #005580;
+    --teal-light: #e6f4f8;
+    --teal-mid: #b3daea;
+    --gold: #d4870a;
+    --gold-light: #fef3e0;
+    --green: #1a7a4a;
+    --green-light: #e6f5ed;
+    --red: #c0392b;
+    --red-light: #fdf0ee;
+    --amber: #c47a00;
+    --amber-light: #fff8e6;
+    --surface: #f7f8fa;
+    --card: #ffffff;
+    --border: rgba(0,43,61,0.1);
+    --border-strong: rgba(0,43,61,0.18);
+    --text-primary: #0d1f2d;
+    --text-secondary: #4a6070;
+    --text-muted: #8099a8;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0,43,61,0.96);
+    backdrop-filter: blur(12px);
+    padding: 0 16px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-logos { display: flex; align-items: center; gap: 8px; }
+  .nav-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+  .nav-x { color: rgba(255,255,255,0.35); font-size: 14px; }
+  .nav-badge {
+    font-size: 10px;
+    background: var(--gold);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #001d2c 0%, #003d5c 60%, #005a80 100%);
+    padding: 32px 20px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(0,130,180,0.18) 0%, transparent 60%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0; right: 0;
+    height: 32px;
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+  }
+  .hero-inner { position: relative; }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .hero-title span { color: #5bc8f0; }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+    margin-bottom: 20px;
+    max-width: 420px;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hero-tag {
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.02em;
+  }
+  .hero-tag.highlight { background: rgba(91,200,240,0.15); border-color: rgba(91,200,240,0.3); color: #5bc8f0; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 520px; margin: 0 auto; padding: 0 16px 40px; }
+
+  /* ── SECTION HEADERS ── */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── GREYTT CONTEXT ── */
+  .context-grid { display: grid; gap: 8px; }
+  .ctx-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .ctx-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+    color: var(--teal);
+  }
+  .ctx-label { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .ctx-val { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* ── USE CASE CARDS ── */
+  .uc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+    transition: box-shadow 0.2s;
+  }
+  .uc-card:active { box-shadow: 0 4px 24px rgba(0,43,61,0.1); }
+  .uc-header {
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .uc-num-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .uc-head-text { flex: 1; }
+  .uc-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+  .uc-subtitle { font-size: 12px; color: var(--text-muted); }
+  .uc-chevron {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .uc-chevron.open { transform: rotate(180deg); }
+  .uc-body {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .uc-body.open { display: block; }
+  .uc-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    padding: 12px 0 10px;
+  }
+  .product-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .ptag {
+    font-size: 10px;
+    padding: 4px 9px;
+    border-radius: 99px;
+    background: #e6f4fb;
+    color: #005580;
+    border: 1px solid #b3daea;
+    font-weight: 500;
+  }
+  .steps { border-top: 1px solid var(--border); padding-top: 12px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+  .step:last-child { margin-bottom: 0; }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-text { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+  .step-text strong { color: var(--text-primary); font-weight: 600; }
+  .code-block {
+    background: #001c2b;
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin: 10px 0 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #7dd3ee;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-comment { color: rgba(125,211,238,0.45); }
+  .code-key { color: #fac75b; }
+  .code-val { color: #a8e6cf; }
+
+  /* ── ARCHITECTURE ── */
+  .arch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .arch-flow { display: flex; flex-direction: column; gap: 6px; }
+  .arch-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .arch-node {
+    background: var(--teal-light);
+    border: 1px solid var(--teal-mid);
+    color: var(--navy);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .arch-node.bright { background: #e0f0fb; border-color: #80c0df; }
+  .arch-node.greytt { background: #e6f5ed; border-color: #80c8a0; color: var(--green); }
+  .arch-node.ai { background: var(--gold-light); border-color: #f5c97a; color: var(--gold); }
+  .arch-arrow { color: var(--text-muted); font-size: 16px; }
+  .arch-label { font-size: 10px; color: var(--text-muted); padding: 0 4px; white-space: nowrap; }
+
+  /* ── STATS ── */
+  .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+  }
+  .stat-val { font-size: 22px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .stat-val small { font-size: 13px; font-weight: 400; color: var(--text-muted); }
+  .stat-lbl { font-size: 11px; color: var(--text-muted); }
+
+  /* ── PRIORITY ── */
+  .priority-list { display: flex; flex-direction: column; gap: 6px; }
+  .pri-row {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pri-label { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+  .pri-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge.now { background: var(--green-light); color: var(--green); }
+  .badge.soon { background: var(--amber-light); color: var(--amber); }
+  .badge.later { background: var(--teal-light); color: var(--teal); }
+
+  /* ── BUDGET ── */
+  .budget-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-stage { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .budget-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .budget-amount { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .budget-amount.free { color: var(--green); }
+  .budget-amount.possible { color: var(--gold); font-size: 12px; }
+
+  /* ── VERDICT ── */
+  .verdict-card {
+    background: var(--navy);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(91,200,240,0.08);
+  }
+  .verdict-inner { position: relative; }
+  .verdict-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .verdict-score-box {
+    background: rgba(91,200,240,0.12);
+    border: 1px solid rgba(91,200,240,0.25);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .verdict-score { font-size: 28px; font-weight: 600; color: #5bc8f0; line-height: 1; }
+  .verdict-score-lbl { font-size: 9px; color: rgba(91,200,240,0.6); letter-spacing: 0.08em; margin-top: 2px; }
+  .verdict-title { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.3; margin-bottom: 2px; }
+  .verdict-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+  .verdict-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.65; }
+  .verdict-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .vpill {
+    font-size: 10px;
+    padding: 4px 9px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.6);
+  }
+  .vpill.green { background: rgba(26,122,74,0.2); border-color: rgba(26,122,74,0.4); color: #6dda9d; }
+
+  /* ── CTA BUTTONS ── */
+  .cta-group { display: flex; flex-direction: column; gap: 8px; }
+  .cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s, border-color 0.15s;
+    text-decoration: none;
+  }
+  .cta-btn:active { background: var(--teal-light); border-color: var(--teal-mid); }
+  .cta-arrow { color: var(--teal); font-size: 18px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 32px;
+    padding: 16px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+  }
+  .footer a { color: var(--teal); text-decoration: none; }
+
+  /* ── ICONS (inline SVG fallback) ── */
+  .ico { display: inline-block; vertical-align: middle; }
+
+  /* ── SCORECARD ── */
+  .score-list { display: flex; flex-direction: column; gap: 8px; }
+  .score-row { display: flex; align-items: center; gap: 10px; }
+  .score-name { font-size: 12px; color: var(--text-secondary); width: 100px; flex-shrink: 0; }
+  .score-track { flex: 1; height: 5px; background: var(--teal-light); border-radius: 99px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 99px; background: var(--teal); }
+  .score-num { font-size: 12px; font-weight: 600; color: var(--navy); width: 28px; text-align: right; }
+
+  @media (min-width: 480px) {
+    .hero { padding: 40px 24px 44px; }
+    .hero-title { font-size: 30px; }
+    .page { padding: 0 20px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-logos">
+    <span class="nav-pill">Bright Data</span>
+    <span class="nav-x">×</span>
+    <span class="nav-pill">Greytt.AI</span>
+  </div>
+  <span class="nav-badge">CTO Playbook</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Integration Guide · May 2026</div>
+    <h1 class="hero-title">Power the <span>Greytt Score™</span><br>with Bright Data</h1>
+    <p class="hero-sub">A CTO-level blueprint for using Bright Data's web infrastructure to continuously feed, enrich, and scale the Greytt Score™ engine for 50+ travel intelligence.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">50+ Travel Platform</span>
+      <span class="hero-tag">Greytt Score™ Engine</span>
+      <span class="hero-tag highlight">⚡ 6 Use Cases</span>
+      <span class="hero-tag">Asia-first</span>
+      <span class="hero-tag">AI-native</span>
+    </div>
+  </div>
+</section>
+
+<main class="page">
+
+  <!-- GREYTT CONTEXT -->
+  <div style="height:24px"></div>
+  <section class="section">
+    <div class="section-label">Greytt.AI — what it needs</div>
+    <div class="context-grid">
+      <div class="ctx-card">
+        <div class="ctx-icon">🎯</div>
+        <div>
+          <div class="ctx-label">Mission</div>
+          <div class="ctx-val">AI-powered travel intelligence for 50+ travelers — curated, scored, and age-centered experiences across Asia</div>
+        </div>
+      </div>
+      <div class="ctx-card">
+        <div class="ctx-icon">⭐</div>
+        <div>
+          <div class="ctx-label">Core IP — Greytt Score™</div>
+          <div class="ctx-val">Patent-pending Fit-for-50+ rating built on 50+ attributes: accessibility, comfort, safety, mobility, noise, bathroom usability</div>
+        </div>
+      </div>
+      <div class="ctx-card">
+        <div class="ctx-icon">📊</div>
+        <div>
+          <div class="ctx-label">Data model inputs</div>
+          <div class="ctx-val">Public ratings · Live reviews · Sentiment analysis · Physical/digital audits · Community validation from Greytt users</div>
+        </div>
+      </div>
+      <div class="ctx-card">
+        <div class="ctx-icon">🗺️</div>
+        <div>
+          <div class="ctx-label">Markets & partners</div>
+          <div class="ctx-val">Singapore, Malaysia, Thailand, Bali, Korea · Partners: Agoda, Viator, GetYourGuide, Klook</div>
+        </div>
+      </div>
+      <div class="ctx-card">
+        <div class="ctx-icon">⚠️</div>
+        <div>
+          <div class="ctx-label">Core data bottleneck</div>
+          <div class="ctx-val">Needs continuous, structured, scalable data from 100s of hotel & activity platforms — Bright Data solves this end-to-end</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section">
+    <div class="section-label">Strategic fit at a glance</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val">50<small>+ attrs</small></div>
+        <div class="stat-lbl">In Greytt Score™ model</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">6</div>
+        <div class="stat-lbl">Bright Data use cases</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">$0</div>
+        <div class="stat-lbl">To start (7-day trial)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">1<small> sprint</small></div>
+        <div class="stat-lbl">To live MCP integration</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="section">
+    <div class="section-label">6 integration use cases</div>
+
+    <!-- UC1 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">01</div>
+        <div class="uc-head-text">
+          <div class="uc-title">Live review & sentiment pipeline</div>
+          <div class="uc-subtitle">Feed the Greytt Score™ with fresh traveler voices</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body open">
+        <p class="uc-desc">The Greytt Score™ requires continuous ingestion of real traveler reviews from Booking.com, TripAdvisor, Agoda, Google Hotels, and Trustpilot. Bright Data's Web Scraper API has pre-built collectors for all of these — no custom scraper maintenance. Pair with NLP sentiment analysis to extract 50+ specific signals like mentions of "elevator", "handrails", "uneven steps", "dark lighting", "loud music".</p>
+        <div class="product-tags">
+          <span class="ptag">Web Scraper API</span>
+          <span class="ptag">Web Unlocker</span>
+          <span class="ptag">Datasets</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Configure</strong> pre-built TripAdvisor &amp; Booking.com collectors in Bright Data dashboard — no code required</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Schedule</strong> daily pulls for all hotels and activities in the Greytt database</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Stream</strong> JSON output to your NLP pipeline via webhook — extract 50+ signals and update Greytt Scores automatically</div></div>
+        </div>
+        <div class="code-block"><span class="code-comment">// Bright Data Scraper API — webhook delivery</span>
+POST https://api.brightdata.com/datasets/v3/trigger
+{
+  <span class="code-key">"dataset_id"</span>: <span class="code-val">"tripadvisor_hotel_reviews"</span>,
+  <span class="code-key">"inputs"</span>: [{ <span class="code-key">"url"</span>: <span class="code-val">"hotel_url"</span> }],
+  <span class="code-key">"format"</span>: <span class="code-val">"json"</span>,
+  <span class="code-key">"webhook"</span>: <span class="code-val">"https://api.greytt.ai/ingest/reviews"</span>
+}</div>
+      </div>
+    </div>
+
+    <!-- UC2 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">02</div>
+        <div class="uc-head-text">
+          <div class="uc-title">Hotel & activity attribute enrichment</div>
+          <div class="uc-subtitle">Populate 50+ attribute model at scale</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body">
+        <p class="uc-desc">The Greytt Score™ is powered by 50+ Fit-for-50+ attributes — elevator availability, room floor, bathroom type, pool depth, noise levels, shuttle services, and step count. These live across hotel websites, OTA listing pages, and accessibility databases. Bright Data's SERP API and Web Unlocker extract structured attribute data from Booking.com, Agoda, and direct hotel sites across all target markets.</p>
+        <div class="product-tags">
+          <span class="ptag">SERP API</span>
+          <span class="ptag">Web Unlocker API</span>
+          <span class="ptag">Browser.ai</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Query</strong> SERP API for hotel name + location to pull structured amenity data from Google's rich results</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Unlock</strong> OTA hotel listing pages via Web Unlocker to extract JS-rendered accessibility fields</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Map</strong> extracted fields to your 50+ attribute schema and ingest into the Greytt Score engine</div></div>
+        </div>
+        <div class="code-block"><span class="code-comment">// SERP API: hotel accessibility signals</span>
+GET /serp?engine=google
+  &q=<span class="code-val">"Mandarin Oriental Bangkok" accessibility elderly</span>
+  &location=<span class="code-val">Thailand</span>
+  &format=<span class="code-val">json</span></div>
+      </div>
+    </div>
+
+    <!-- UC3 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">03</div>
+        <div class="uc-head-text">
+          <div class="uc-title">Competitive intelligence & pricing</div>
+          <div class="uc-subtitle">Monitor partner OTA pricing at geo-level</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body">
+        <p class="uc-desc">Greytt's partners include Agoda, Viator, GetYourGuide, and Klook. Monitoring how these platforms price and categorize accessibility-friendly inventory helps Greytt surface better recommendations, benchmark how Greytt Score™ impacts conversion, and identify gaps competitors haven't filled in the 50+ travel segment.</p>
+        <div class="product-tags">
+          <span class="ptag">Web Scraper API</span>
+          <span class="ptag">Residential Proxies</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Scrape</strong> Agoda &amp; Klook daily for price deltas on hotels Greytt has scored — detect seasonal spikes for 50+ travelers</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Use</strong> geo-targeted proxies (Singapore, KL, Bangkok) to see localised OTA pricing for accurate comparison</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Feed</strong> price signals into Greytt's recommendation engine to surface "best value for 50+" alerts to users</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC4 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">04</div>
+        <div class="uc-head-text">
+          <div class="uc-title">AI agent web access via MCP</div>
+          <div class="uc-subtitle">Give Greytt's AI assistant live internet eyes</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body">
+        <p class="uc-desc">Greytt's AI assistant needs real-time knowledge — current hotel availability, policy changes, fresh reviews. Bright Data's Web MCP server lets any LLM agent search, extract, and navigate the live web without bot detection, with zero proxy management. This is the fastest path to giving Greytt's AI live internet access in a single sprint.</p>
+        <div class="product-tags">
+          <span class="ptag">Web MCP</span>
+          <span class="ptag">Browser.ai</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Connect</strong> Bright Data MCP server to your LLM stack — works with Claude, GPT-4, Gemini</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Let</strong> the agent query live hotel pages, current availability, and cancellation policies in real time</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Combine</strong> with Greytt Score™ to return personalized, score-ranked, live results to 50+ users</div></div>
+        </div>
+        <div class="code-block"><span class="code-comment">// MCP config in Greytt's agent stack</span>
+mcp_servers: [{
+  <span class="code-key">type</span>: <span class="code-val">"url"</span>,
+  <span class="code-key">url</span>: <span class="code-val">"https://mcp.brightdata.com/sse"</span>,
+  <span class="code-key">name</span>: <span class="code-val">"brightdata-web"</span>
+}]
+<span class="code-comment">// Agent gains: web_search() · scrape_url() · navigate()</span></div>
+      </div>
+    </div>
+
+    <!-- UC5 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">05</div>
+        <div class="uc-head-text">
+          <div class="uc-title">Destination & activity discovery</div>
+          <div class="uc-subtitle">Auto-expand the Greytt database continuously</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body">
+        <p class="uc-desc">Greytt needs to continuously onboard new hotels, tours, and activities. Rather than manual curation, Bright Data's Deep Lookup and AI-powered custom scrapers can auto-discover new listings matching Greytt's 50+ criteria — filtering by accessibility ratings, review sentiment, and star category — across GetYourGuide, Viator, and Klook.</p>
+        <div class="product-tags">
+          <span class="ptag">Deep Lookup (beta)</span>
+          <span class="ptag">Custom AI Scraper</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Query</strong> Deep Lookup in plain language: "Hotels in Kyoto with elevator, spa, rated 4.5+ by 50+ travelers"</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Receive</strong> structured dataset — pre-filtered, enriched, exportable as CSV/JSON — within minutes</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Auto-enroll</strong> qualifying properties into Greytt's scoring pipeline for Greytt Score™ generation</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UC6 -->
+    <div class="uc-card">
+      <div class="uc-header" onclick="toggleUC(this)">
+        <div class="uc-num-badge">06</div>
+        <div class="uc-head-text">
+          <div class="uc-title">Market research automation</div>
+          <div class="uc-subtitle">Power Generation Greytt research reports</div>
+        </div>
+        <div class="uc-chevron">▾</div>
+      </div>
+      <div class="uc-body">
+        <p class="uc-desc">Greytt publishes "Research: Generation Greytt" — industry reports on the 50+ travel segment. Bright Data can automate collection of market data, travel spend statistics, competitor analysis, and trend articles from tourism boards and publications across Asia, feeding Greytt's thought leadership and B2B product strategy.</p>
+        <div class="product-tags">
+          <span class="ptag">SERP API</span>
+          <span class="ptag">Datasets</span>
+          <span class="ptag">Deep Lookup</span>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Schedule</strong> SERP queries for "50+ travel trends Asia 2025", "senior travel spending" across Google News weekly</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Aggregate</strong> into a structured research feed delivered to Greytt's content and strategy team</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Use</strong> Deep Lookup for partnership and M&A target discovery in the age-tech ecosystem</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section class="section">
+    <div class="section-label">Recommended data architecture</div>
+    <div class="arch-card">
+      <div class="arch-flow">
+        <div class="arch-row">
+          <div class="arch-node">🌐 OTAs, Hotels, Review Platforms</div>
+        </div>
+        <div class="arch-row" style="padding-left:16px">
+          <div class="arch-arrow">↓</div>
+          <div class="arch-label">web requests via proxies</div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-node bright">⚡ Bright Data Layer</div>
+          <div class="arch-label">Scraper · Unlocker · SERP · MCP</div>
+        </div>
+        <div class="arch-row" style="padding-left:16px">
+          <div class="arch-arrow">↓</div>
+          <div class="arch-label">JSON / webhook</div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-node greytt">🔗 Greytt Ingest API</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node ai">🧠 NLP + Attribute Engine</div>
+        </div>
+        <div class="arch-row" style="padding-left:16px">
+          <div class="arch-arrow">↓</div>
+          <div class="arch-label">scored output</div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-node greytt">⭐ Greytt Score™ Engine</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node" style="background:#f0f4f8">📱 Greytt.AI App</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORECARD -->
+  <section class="section">
+    <div class="section-label">CTO scorecard</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px">
+      <div class="score-list">
+        <div class="score-row"><span class="score-name">Strategic fit</span><div class="score-track"><div class="score-fill" style="width:98%"></div></div><span class="score-num">9.8</span></div>
+        <div class="score-row"><span class="score-name">Data coverage</span><div class="score-track"><div class="score-fill" style="width:95%"></div></div><span class="score-num">9.5</span></div>
+        <div class="score-row"><span class="score-name">Setup speed</span><div class="score-track"><div class="score-fill" style="width:85%"></div></div><span class="score-num">8.5</span></div>
+        <div class="score-row"><span class="score-name">Compliance</span><div class="score-track"><div class="score-fill" style="width:90%"></div></div><span class="score-num">9.0</span></div>
+        <div class="score-row"><span class="score-name">Cost efficiency</span><div class="score-track"><div class="score-fill" style="width:70%"></div></div><span class="score-num">7.0</span></div>
+        <div class="score-row"><span class="score-name">AI readiness</span><div class="score-track"><div class="score-fill" style="width:92%"></div></div><span class="score-num">9.2</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPLEMENTATION PRIORITY -->
+  <section class="section">
+    <div class="section-label">Implementation priority</div>
+    <div class="priority-list">
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">Review & sentiment pipeline</div>
+          <div class="pri-sub">Core Greytt Score™ input — highest ROI</div>
+        </div>
+        <span class="badge now">Start now</span>
+      </div>
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">50+ attribute enrichment</div>
+          <div class="pri-sub">Fills the attribute model at scale</div>
+        </div>
+        <span class="badge now">Start now</span>
+      </div>
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">MCP for AI assistant</div>
+          <div class="pri-sub">Live web access — 1 sprint to integrate</div>
+        </div>
+        <span class="badge soon">Month 2–3</span>
+      </div>
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">Pricing intelligence</div>
+          <div class="pri-sub">Partner OTA monitoring at geo-level</div>
+        </div>
+        <span class="badge soon">Month 2–3</span>
+      </div>
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">Discovery automation</div>
+          <div class="pri-sub">Deep Lookup for new property onboarding</div>
+        </div>
+        <span class="badge later">Month 4+</span>
+      </div>
+      <div class="pri-row">
+        <div>
+          <div class="pri-label">Research automation</div>
+          <div class="pri-sub">Generation Greytt report pipeline</div>
+        </div>
+        <span class="badge later">Ongoing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="section">
+    <div class="section-label">Estimated Bright Data budget for Greytt</div>
+    <div class="budget-card">
+      <div class="budget-row">
+        <div>
+          <div class="budget-stage">Stage 1 — MVP pilot</div>
+          <div class="budget-sub">7-day free trial, 2 use cases</div>
+        </div>
+        <div class="budget-amount free">Free</div>
+      </div>
+      <div class="budget-row">
+        <div>
+          <div class="budget-stage">Stage 2 — Early traction</div>
+          <div class="budget-sub">~100–500 hotels, daily reviews</div>
+        </div>
+        <div class="budget-amount">$200–500/mo</div>
+      </div>
+      <div class="budget-row">
+        <div>
+          <div class="budget-stage">Stage 3 — Scale</div>
+          <div class="budget-sub">1,000+ hotels, full pipeline active</div>
+        </div>
+        <div class="budget-amount">$500–1,500/mo</div>
+      </div>
+      <div class="budget-row">
+        <div>
+          <div class="budget-stage">Bright Initiative</div>
+          <div class="budget-sub">Pro-bono / discounted for research-led platforms</div>
+        </div>
+        <div class="budget-amount possible">Apply →</div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:8px;padding:0 4px">Greytt may qualify for the Bright Initiative — Bright Data's programme offering pro-bono or discounted access for platforms with an academic or public-good research component (e.g. Generation Greytt research).</p>
+  </section>
+
+  <!-- VERDICT -->
+  <section class="section">
+    <div class="section-label">CTO verdict</div>
+    <div class="verdict-card">
+      <div class="verdict-inner">
+        <div class="verdict-top">
+          <div class="verdict-score-box">
+            <div class="verdict-score">9.5</div>
+            <div class="verdict-score-lbl">FIT SCORE</div>
+          </div>
+          <div>
+            <div class="verdict-title">Very high strategic fit</div>
+            <div class="verdict-sub">Bright Data solves Greytt's core data bottleneck</div>
+          </div>
+        </div>
+        <p class="verdict-text">Bright Data directly solves Greytt's core infrastructure problem — continuous, structured, scalable public web data to power the Greytt Score™. Start with the 7-day free trial targeting just two use cases: review ingestion from TripAdvisor/Booking.com, and attribute enrichment for 20–30 new properties. Measure score refresh frequency improvement and engineering hours saved before committing to a paid tier. The MCP integration for Greytt's AI assistant is a high-leverage move deployable in a single sprint — and it could transform the product's real-time intelligence capability overnight.</p>
+        <div class="verdict-pills">
+          <span class="vpill green">✓ No custom proxy infra needed</span>
+          <span class="vpill green">✓ GDPR & CCPA compliant</span>
+          <span class="vpill green">✓ Pre-built OTA collectors</span>
+          <span class="vpill">7-day free trial</span>
+          <span class="vpill">Webhook delivery</span>
+          <span class="vpill">MCP-ready</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BUTTONS -->
+  <section class="section">
+    <div class="section-label">Go deeper</div>
+    <div class="cta-group">
+      <a class="cta-btn" href="https://brightdata.com" target="_blank">
+        <span>Start Bright Data free trial →</span>
+        <span class="cta-arrow">↗</span>
+      </a>
+      <a class="cta-btn" href="https://greytt.ai" target="_blank">
+        <span>Explore Greytt.AI platform →</span>
+        <span class="cta-arrow">↗</span>
+      </a>
+      <a class="cta-btn" href="https://brightdata.com/initiative" target="_blank">
+        <span>Apply for Bright Initiative (discount) →</span>
+        <span class="cta-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>Compiled May 2026 · <a href="https://brightdata.com" target="_blank">brightdata.com</a> · <a href="https://greytt.ai" target="_blank">greytt.ai</a></p>
+  <p style="margin-top:4px">Based on publicly available information from both companies</p>
+</footer>
+
+<script>
+  function toggleUC(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.uc-chevron');
+    const isOpen = body.classList.contains('open');
+    // close all
+    document.querySelectorAll('.uc-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.uc-chevron').forEach(c => c.classList.remove('open'));
+    // toggle clicked
+    if (!isOpen) {
+      body.classList.add('open');
+      chevron.classList.add('open');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+
+</body>
+</html>
